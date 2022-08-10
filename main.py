@@ -1,5 +1,4 @@
 import json
-from wsgiref.simple_server import make_server
 
 import falcon
 import requests
@@ -23,11 +22,12 @@ for i in ["cert", "key"]:
         f.write(vop_auth[i])
 
 
-class Healthz():
+class Healthz:
     def on_get(self, req, resp):
         resp.status = falcon.HTTP_200
         resp.content_type = falcon.MEDIA_TEXT
         resp.text = "healthy"
+
 
 class VisaHelloWorld:
     def on_get(self, req, resp):
