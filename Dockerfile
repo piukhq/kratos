@@ -1,0 +1,14 @@
+FROM docker.io/python:3.10 as requirements
+
+WORKDIR /app
+COPY pyproject.toml poetry.lock main.py settings.py /app/
+RUN pip install poetry==1.2.0b3
+RUN poetry export -f requirements.txt --output requirements.txt
+
+FROM ghcr.io/binkhq/python:3.10
+WORKDIR /app
+COPY --from=requirements /app/ /app/
+RUN pip install -r requirements.txt
+
+ENTRYPOINT [ "linkerd-await", "--" ]
+CMD [ "gunicorn", "--bind=0.0.0.0:6502", "--workers=2", "main:app" ]
