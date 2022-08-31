@@ -6,6 +6,7 @@ from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 
 from settings import settings
+from amex_merchant_search import AmexMerchantSearch
 
 credential = DefaultAzureCredential()
 kv_client = SecretClient(vault_url=settings.keyvault_url, credential=credential)
@@ -62,7 +63,7 @@ class VisaGetTransaction:
     def on_post(self, req, resp):
         if req.query_string == f"auth={settings.auth_token}":
             r = self.vop_request(
-                transaction_ammount=req.media["transactionAmount"],
+                transaction_amount=req.media["transactionAmount"],
                 transaction_date=req.media["transactionDate"],
                 user_key=req.media["userKey"],
                 community_code=req.media["communityCode"],
@@ -76,7 +77,7 @@ class VisaGetTransaction:
             resp.text = "Access Denied"
 
     def vop_request(
-        self, transaction_ammount: float, transaction_date: str, user_key: str, community_code: str
+        self, transaction_amount: float, transaction_date: str, user_key: str, community_code: str
     ) -> json:
         for _ in range(10):
             try:
@@ -86,7 +87,7 @@ class VisaGetTransaction:
                     cert=("/tmp/vop_cert.pem", "/tmp/vop_key.pem"),
                     headers={"Content-Type": "application/json"},
                     json={
-                        "transactionAmount": transaction_ammount,
+                        "transactionAmount": transaction_amount,
                         "transactionDate": transaction_date,
                         "userKey": user_key,
                         "communityCode": community_code,
@@ -103,3 +104,4 @@ app = falcon.App()
 app.add_route("/healthz", Healthz())
 app.add_route("/vop/helloworld", VisaHelloWorld())
 app.add_route("/vop/gettransaction", VisaGetTransaction())
+app.add_route("/amex/merchantsearch", AmexMerchantSearch())
