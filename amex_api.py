@@ -8,7 +8,6 @@ from datetime import datetime
 import json
 import requests
 from urllib.parse import urlsplit
-from amex_connection import Amex_Connection
 from settings import settings
 import uuid
 import time
