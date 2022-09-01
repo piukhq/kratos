@@ -3,7 +3,6 @@ import falcon
 from settings import settings
 from amex_api import search_amex_merchants
 
-from tempfile import NamedTemporaryFile
 logger = logging.getLogger(__name__)
 
 class AmexMerchantSearch:
