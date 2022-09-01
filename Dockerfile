@@ -1,7 +1,7 @@
 FROM docker.io/python:3.10 as requirements
 
 WORKDIR /app
-COPY pyproject.toml poetry.lock main.py settings.py /app/
+COPY pyproject.toml poetry.lock main.py settings.py amex_merchant_search.py amex_api.py /app/
 RUN pip install poetry==1.2.0b3
 RUN poetry export -f requirements.txt --output requirements.txt
 
