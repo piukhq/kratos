@@ -100,8 +100,52 @@ class VisaGetTransaction:
         return r.json()
 
 
+class VisaGetMerchant:
+    def on_get(self, req, resp):
+        if req.query_string == f"auth={settings.auth_token}":
+            r = self.vop_request(
+                community_code=req.media["communityCode"],
+                merchant_name=req.media["merchantName"],
+                merchant_country_code=req.media["merchantCountryCode"],
+                merchant_postal_code=req.media["merchantPostalCode"],
+            )
+            resp.status = falcon.HTTP_200
+            resp.content_type = falcon.MEDIA_JSON
+            resp.media = r
+        else:
+            resp.status = falcon.HTTP_401
+            resp.content_type = falcon.MEDIA_TEXT
+            resp.text = "Access Denied"
+
+    def vop_request(
+        self, community_code: str, merchant_name: str, merchant_country_code: int, merchant_postal_code: str
+    ):
+
+        for _ in range(10):
+            try:
+                r = requests.get(
+                    f"https://api.visa.com/vop/v1/merchants/search/details",
+                    auth=(vop_auth["username"], vop_auth["password"]),
+                    cert=("/tmp/vop_cert.pem", "/tmp/vop_key.pem"),
+                    headers={"Content-Type": "application/json"},
+                    params={
+                        "communityCode": community_code,
+                        "merchantName": merchant_name,
+                        "merchantCountryCode": merchant_country_code,
+                        "merchantPostalCode": merchant_postal_code,
+                    }
+                )
+                r.raise_for_status()
+            except requests.exceptions.HTTPError:
+                print("retrying request")
+                continue
+            break
+        return r.json()
+
+
 app = falcon.App()
 app.add_route("/healthz", Healthz())
 app.add_route("/vop/helloworld", VisaHelloWorld())
 app.add_route("/vop/gettransaction", VisaGetTransaction())
+app.add_route("/vop/getmerchant", VisaGetMerchant())
 app.add_route("/amex/merchantsearch", AmexMerchantSearch())
