@@ -104,20 +104,14 @@ class VisaSearchMerchantGroup:
             resp.content_type = falcon.MEDIA_TEXT
             resp.text = "Access Denied"        
 
-    def vop_request(
-        self, community_code: str, merchant_name: str, merchant_country_code: int, merchant_postal_code: str
-    ):
-
+    def vop_request(self, community_code):
         for _ in range(10):
             try:
                 r = requests.get(
-                    f"{settings.visa_hostname}",
+                    f"https://sandbox.api.visa.com/vop/v1/merchants/groups?communityCode={community_code}",
                     auth=(vop_auth["username"], vop_auth["password"]),
                     cert=("/tmp/vop_cert.pem", "/tmp/vop_key.pem"),
                     headers={"Content-Type": "application/json"},
-                    params={
-                        "communityCode": community_code,
-                    }
                 )
                 r.raise_for_status()
             except requests.exceptions.HTTPError:
@@ -125,6 +119,7 @@ class VisaSearchMerchantGroup:
                 continue
             break
         return r.json()
+
 
 class VisaGetMerchant:
     def on_get(self, req, resp):
