@@ -108,7 +108,7 @@ class VisaSearchMerchantGroup:
         for _ in range(10):
             try:
                 r = requests.get(
-                    f"https://sandbox.api.visa.com/vop/v1/merchants/groups?communityCode={community_code}",
+                    f"https://api.visa.com/vop/v1/merchants/groups?communityCode={community_code}",
                     auth=(vop_auth["username"], vop_auth["password"]),
                     cert=("/tmp/vop_cert.pem", "/tmp/vop_key.pem"),
                     headers={"Content-Type": "application/json"},
