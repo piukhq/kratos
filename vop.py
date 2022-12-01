@@ -21,6 +21,16 @@ for i in ["cert", "key"]:
     with open(f"/tmp/vop_{i}.pem", "w") as f:
         f.write(vop_auth[i])
 
+def get_auth_code_from_query_parameters(req):
+    for key, value in req.params.items():
+        if key == "auth":
+            return value    
+
+def get_community_code_from_query_params(req):
+    for key, value in req.params.items():
+        if key == "community_code":
+            return value
+
 class VisaHelloWorld:
     def on_get(self, req, resp):
         if req.query_string == f"auth={settings.visa_auth_token}":
@@ -92,9 +102,9 @@ class VisaGetTransaction:
 
 class VisaSearchMerchantGroup:
     def on_get(self, req, resp):
-        if req.query_string == f"auth={settings.visa_auth_token}":
+        if get_auth_code_from_query_parameters(req) == settings.visa_auth_token:
             r = self.vop_request(
-                community_code=settings.visa_community_code
+                community_code=get_community_code_from_query_params(req)
             )
             resp.status = falcon.HTTP_200
             resp.content_type = falcon.MEDIA_JSON
@@ -120,6 +130,35 @@ class VisaSearchMerchantGroup:
             break
         return r.json()
 
+class VisaOfferCommunity:
+    def on_get(self, req, resp):
+        if get_auth_code_from_query_parameters(req) == settings.visa_auth_token:
+            r = self.vop_request(
+                community_code=get_community_code_from_query_params(req)
+            )
+            resp.status = falcon.HTTP_200
+            resp.content_type = falcon.MEDIA_JSON
+            resp.media = r
+        else:
+            resp.status = falcon.HTTP_401
+            resp.content_type = falcon.MEDIA_TEXT
+            resp.text = "Access Denied"        
+
+    def vop_request(self, community_code):
+        for _ in range(10):
+            try:
+                r = requests.get(
+                    f"https://api.visa.com/vop/v1/offers/community?communityCode={community_code}",
+                    auth=(vop_auth["username"], vop_auth["password"]),
+                    cert=("/tmp/vop_cert.pem", "/tmp/vop_key.pem"),
+                    headers={"Content-Type": "application/json"},
+                )
+                r.raise_for_status()
+            except requests.exceptions.HTTPError:
+                print("retrying request")
+                continue
+            break
+        return r.json()
 
 class VisaGetMerchant:
     def on_get(self, req, resp):
