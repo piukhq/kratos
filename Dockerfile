@@ -1,8 +1,9 @@
 FROM docker.io/python:3.10 as requirements
 
 WORKDIR /app
-COPY pyproject.toml poetry.lock main.py settings.py vop.py amex_merchant_search.py amex_api.py /app/
+COPY pyproject.toml poetry.lock main.py settings.py vop.py amex_merchant_search.py amex_api.py givex*.py /app/
 RUN pip install poetry==1.2.0b3
+RUN poetry config virtualenvs.create false
 RUN poetry export -f requirements.txt --output requirements.txt
 
 FROM ghcr.io/binkhq/python:3.10
