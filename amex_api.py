@@ -3,7 +3,6 @@ import logging
 import hmac
 import base64
 import hashlib
-import logging
 from datetime import datetime
 import json
 import requests
@@ -14,6 +13,7 @@ import time
 import typing as t
 from urllib3.util.retry import Retry
 from tempfile import NamedTemporaryFile
+from utility import _write_tmp_files
 
 from azure.core.exceptions import ServiceRequestError
 from azure.identity import DefaultAzureCredential
@@ -115,13 +115,3 @@ def load_cert_from_vault():
         logger.error("Could not retrieve cert/key data from vault")
 
     return client_priv_path, client_cert_path
-
-
-def _write_tmp_files(key: str, cert: str):
-    paths = []
-    for data in (key, cert):
-        file = NamedTemporaryFile(delete=False)
-        paths.append(file.name)
-        file.write(data.encode())
-        file.close()
-    return tuple(paths)

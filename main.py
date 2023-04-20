@@ -8,6 +8,7 @@ from azure.keyvault.secrets import SecretClient
 from settings import settings
 from amex_merchant_search import AmexMerchantSearch
 from vop import VisaHelloWorld, VisaGetTransaction, VisaGetMerchant, VisaSearchMerchantGroup, VisaOfferCommunity
+from givex import GivexAccountLookup, GivexAccountHistory
 
 credential = DefaultAzureCredential()
 kv_client = SecretClient(vault_url=settings.keyvault_url, credential=credential)
@@ -38,3 +39,5 @@ app.add_route("/vop/getmerchant", VisaGetMerchant())
 app.add_route("/vop/merchantgroup", VisaSearchMerchantGroup())
 app.add_route("/vop/offercommunity", VisaOfferCommunity())
 app.add_route("/amex/merchantsearch", AmexMerchantSearch())
+app.add_route("/givex/accountlookup", GivexAccountLookup())
+app.add_route("/givex/accounthistory", GivexAccountHistory())

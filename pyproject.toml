@@ -13,7 +13,7 @@ azure-keyvault-secrets = "^4.4.0"
 azure-identity = "^1.10.0"
 pydantic = "^1.9.1"
 gunicorn = "^20.1.0"
-
+jsonrpclib = "*"
 
 [tool.poetry.group.dev.dependencies]
 Flake8-pyproject = "^1.0.1"
