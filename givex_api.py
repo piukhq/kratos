@@ -4,7 +4,7 @@ from azure.keyvault.secrets import SecretClient
 import json
 from settings import settings 
 import logging 
-from utilities import connect_to_vault
+from common_modules import connect_to_vault
 from tempfile import NamedTemporaryFile
 
 logger = logging.getLogger(__name__)
