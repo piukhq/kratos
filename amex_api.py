@@ -13,7 +13,7 @@ import time
 import typing as t
 from urllib3.util.retry import Retry
 from tempfile import NamedTemporaryFile
-from utilities import _write_tmp_files
+from common_modules import _write_tmp_files
 
 from azure.core.exceptions import ServiceRequestError
 from azure.identity import DefaultAzureCredential
