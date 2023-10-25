@@ -9,7 +9,7 @@ from settings import settings
 from amex_merchant_search import AmexMerchantSearch
 from vop import VisaHelloWorld, VisaGetTransaction, VisaGetMerchant, VisaSearchMerchantGroup, VisaOfferCommunity
 from givex import GivexAccountLookup, GivexAccountHistory
-
+from stonegate import StonegateFindByEmail
 credential = DefaultAzureCredential()
 kv_client = SecretClient(vault_url=settings.keyvault_url, credential=credential)
 
@@ -33,6 +33,7 @@ class Healthz:
 
 app = falcon.App()
 app.add_route("/healthz", Healthz())
+app.add_route("/sgg/findByEmail", StonegateFindByEmail())
 app.add_route("/vop/helloworld", VisaHelloWorld())
 app.add_route("/vop/gettransaction", VisaGetTransaction())
 app.add_route("/vop/getmerchant", VisaGetMerchant())
