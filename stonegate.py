@@ -59,7 +59,9 @@ class StonegateFindByEmail(Stonegate):
 
         response = requests.request("POST", url, headers=headers, data=payload)
 
-        logging.info(response.text)
+        resp.status = falcon.HTTP_200
+        resp.content_type = falcon.MEDIA_JSON
+        resp.media = json.loads(response.text)
 
     def get_email_from_query_params(self, req):
         for key, value in req.params.items():
