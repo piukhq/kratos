@@ -15,8 +15,8 @@ credential = DefaultAzureCredential()
 kv_client = SecretClient(vault_url=settings.keyvault_url, credential=credential)
 base_url=settings.stonegate_atreemo_url;
 stonegate_auth = {
-    "username": json.loads(kv_client.get_secret("stonegate-outbound-compound-key-join").value)["username"],
-    "password": json.loads(kv_client.get_secret("stonegate-outbound-compound-key-join").value)["password"],
+    "username": json.loads(kv_client.get_secret("stonegate-outbound-compound-key-join").value)["data"]["username"],
+    "password": json.loads(kv_client.get_secret("stonegate-outbound-compound-key-join").value)["data"]["password"],
 }
 
 
