@@ -10,6 +10,7 @@ from amex_merchant_search import AmexMerchantSearch
 from vop import VisaHelloWorld, VisaGetTransaction, VisaGetMerchant, VisaSearchMerchantGroup, VisaOfferCommunity
 from givex import GivexAccountLookup, GivexAccountHistory
 from stonegate import StonegateFindByEmail, StonegateFindByMemberNumber
+from payment_cards import PaymentCards
 credential = DefaultAzureCredential()
 kv_client = SecretClient(vault_url=settings.keyvault_url, credential=credential)
 
@@ -43,3 +44,4 @@ app.add_route("/vop/offercommunity", VisaOfferCommunity())
 app.add_route("/amex/merchantsearch", AmexMerchantSearch())
 app.add_route("/givex/accountlookup", GivexAccountLookup())
 app.add_route("/givex/accounthistory", GivexAccountHistory())
+app.add_route("/v2/payment_cards/", PaymentCards())
