@@ -2,7 +2,7 @@ FROM docker.io/python:3.11 as requirements
 
 WORKDIR /app
 COPY pyproject.toml poetry.lock main.py settings.py vop.py amex_merchant_search.py amex_api.py givex*.py stonegate.py common_modules.py payment_cards.py /app/
-RUN pip install poetry==1.2.0b3
+RUN pip install poetry
 RUN poetry config virtualenvs.create false
 RUN poetry export -f requirements.txt --output requirements.txt
 
