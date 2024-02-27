@@ -4,7 +4,11 @@ from azure.core.exceptions import ServiceRequestError, ResourceNotFoundError
 from azure.identity import DefaultAzureCredential
 from azure.keyvault.secrets import SecretClient
 from requests.adapters import HTTPAdapter
+from hashids import Hashids
 
+
+ALPHABET = "abcdefghijklmnopqrstuvwxyz1234567890"
+hash_ids = Hashids(min_length=32, salt="GJgCh--VgsonCWacO5-MxAuMS9hcPeGGxj5tGsT40FM", alphabet=ALPHABET)
 
 def _write_tmp_files(key: str, cert: str):
     paths = []

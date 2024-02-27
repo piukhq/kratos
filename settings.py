@@ -14,4 +14,7 @@ class Settings(BaseSettings):
     amex_hostname: str = "https://apigateway2s.americanexpress.com"
     stonegate_atreemo_url = "https://rihanna.atreemo.uk"
 
+    # Punchh (TGIF) API 
+    punchh_mobile_api_url: str
+
 settings = Settings()
