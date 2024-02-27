@@ -21,8 +21,8 @@ def generate_signature(uri: str, body: dict, secret: str) -> str:
     payload = "".join((path, (request_body)))
     return hmac.new(bytes(secret, "UTF-8"), bytes(payload, "UTF-8"), hashlib.sha256).hexdigest()
 
-def generate_punchh_app_device_id(self) -> str:
-    return hash_ids.encode(sorted(map(int, self.info["user_set"].split(",")))[0])
+def generate_punchh_app_device_id(user_id) -> str:
+    return hash_ids.encode(user_id)
 
 
 def get_user_id_from_query_parameters(req):
@@ -31,7 +31,7 @@ def get_user_id_from_query_parameters(req):
             return value
 
 def get_mobile_api_secret():
-    secret = json.loads(kv_client.get_secret("tgi-fridays-secret").value)["value"]
+    secret = kv_client.get_secret("tgi-fridays-secret").value
     return secret
 
 def get_platform_api_secret():
@@ -47,15 +47,15 @@ def get_platform_api_headers():
         }
     return response
 
-def get_mobile_api_headers(uri, payload):
+def get_mobile_api_headers(uri, payload, signature):
     response = {
             "Content-Type": "application/json",
             "User-Agent": "bink",
-            "punchh-app-device-id": generate_punchh_app_device_id(),
-            "x-pch-digest": generate_signature(uri, payload, get_mobile_api_secret()),
+            "punchh-app-device-id": generate_punchh_app_device_id(payload["user"]["email"]),
+            "x-pch-digest": signature
+#            "x-pch-digest": generate_signature(uri, payload, get_mobile_api_secret()),
         }
     return response
-
 
 class PunchhUserInfo:
     def on_get(self, req, resp):
@@ -99,7 +99,24 @@ class PunchhDashboardLocations:
         headers = get_platform_api_headers()
         response = requests.request("GET", urljoin(punchh_url, punchh_uri), headers=headers)
 
-        logging.error(f'>>> {response.text}')
+
+        resp.status = falcon.HTTP_200
+        resp.content_type = falcon.MEDIA_JSON
+        resp.media = json.loads(response.text)
+
+class PunchhUserLogin:
+    def on_post(self, req, resp):
+        punchh_url = settings.punchh_mobile_api_url
+        punchh_uri = "/api2/mobile/users/login"
+        request_body = json.dumps(req.media)
+        
+        payload = ''.join((punchh_uri,(request_body)))        
+        secret = get_mobile_api_secret()
+        signature = hmac.new(bytes(secret, 'UTF-8'), bytes(payload, 'UTF-8'), hashlib.sha256).hexdigest()
+
+        headers = get_mobile_api_headers(punchh_uri, req.media ,signature)
+        response = requests.request("POST", urljoin(punchh_url, punchh_uri), headers=headers, data=json.dumps(req.media))
+
 
         resp.status = falcon.HTTP_200
         resp.content_type = falcon.MEDIA_JSON

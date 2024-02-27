@@ -7,7 +7,7 @@ from givex import GivexAccountLookup, GivexAccountHistory
 from stonegate import StonegateFindByEmail, StonegateFindByMemberNumber
 from payment_cards import PaymentCards
 
-from punchh import PunchhUserInfo, PunchhUserExtensiveTimeline, PunchhDashboardLocations
+from punchh import PunchhUserInfo, PunchhUserExtensiveTimeline, PunchhDashboardLocations, PunchhUserLogin
 
 
 class Healthz:
@@ -32,3 +32,4 @@ app.add_route("/v2/payment_cards/", PaymentCards())
 app.add_route("/punchh/users/info", PunchhUserInfo())
 app.add_route("/punchh/users/extensive_timeline", PunchhUserExtensiveTimeline())
 app.add_route("/punchh/dashboard/locations", PunchhDashboardLocations())
+app.add_route("/punchh/mobile/users/login", PunchhUserLogin())
