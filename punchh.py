@@ -91,3 +91,16 @@ class PunchhUserExtensiveTimeline:
         resp.status = falcon.HTTP_200
         resp.content_type = falcon.MEDIA_JSON
         resp.media = json.loads(response.text)
+
+class PunchhDashboardLocations:
+    def on_get(self, req, resp):
+        punchh_url = settings.punchh_mobile_api_url
+        punchh_uri = "/api2/dashboard/locations"
+        headers = get_platform_api_headers()
+        response = requests.request("GET", urljoin(punchh_url, punchh_uri), headers=headers)
+
+        logging.error(f'>>> {response.text}')
+
+        resp.status = falcon.HTTP_200
+        resp.content_type = falcon.MEDIA_JSON
+        resp.media = json.loads(response.text)
