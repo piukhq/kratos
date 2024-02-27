@@ -1,9 +1,4 @@
-import json
-
 import falcon
-import requests
-from azure.identity import DefaultAzureCredential
-from azure.keyvault.secrets import SecretClient
 
 from settings import settings
 from amex_merchant_search import AmexMerchantSearch
@@ -11,19 +6,8 @@ from vop import VisaHelloWorld, VisaGetTransaction, VisaGetMerchant, VisaSearchM
 from givex import GivexAccountLookup, GivexAccountHistory
 from stonegate import StonegateFindByEmail, StonegateFindByMemberNumber
 from payment_cards import PaymentCards
-credential = DefaultAzureCredential()
-kv_client = SecretClient(vault_url=settings.keyvault_url, credential=credential)
 
-vop_auth = {
-    "cert": json.loads(kv_client.get_secret("vop-clientCert").value)["value"],
-    "key": json.loads(kv_client.get_secret("vop-clientKey").value)["value"],
-    "username": json.loads(kv_client.get_secret("vop-authUserId").value)["value"],
-    "password": json.loads(kv_client.get_secret("vop-authPassword").value)["value"],
-}
-
-for i in ["cert", "key"]:
-    with open(f"/tmp/vop_{i}.pem", "w") as f:
-        f.write(vop_auth[i])
+from punchh import PunchhUserInfo, PunchhUserExtensiveTimeline, PunchhDashboardLocations, PunchhUserLogin
 
 
 class Healthz:
@@ -45,3 +29,7 @@ app.add_route("/amex/merchantsearch", AmexMerchantSearch())
 app.add_route("/givex/accountlookup", GivexAccountLookup())
 app.add_route("/givex/accounthistory", GivexAccountHistory())
 app.add_route("/v2/payment_cards/", PaymentCards())
+app.add_route("/punchh/users/info", PunchhUserInfo())
+app.add_route("/punchh/users/extensive_timeline", PunchhUserExtensiveTimeline())
+app.add_route("/punchh/dashboard/locations", PunchhDashboardLocations())
+app.add_route("/punchh/mobile/users/login", PunchhUserLogin())
