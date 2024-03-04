@@ -36,7 +36,6 @@ def get_mobile_api_secret():
 
 def get_platform_api_secret():
     secret = kv_client.get_secret("tgi-fridays-admin-key").value
-    logging.error(secret)
     return secret        
 
 def get_platform_api_headers():
