@@ -112,4 +112,7 @@ class PunchhUserLogin:
         resp.status = falcon.HTTP_200
         resp.content_type = falcon.MEDIA_JSON
         logging.error(f'>>> {response.text}')
-        resp.media = json.loads(response.text)
+        try: 
+            resp.media = json.loads(response.text)
+        except json.decoder.JSONDecodeError:
+            resp.media = response.text

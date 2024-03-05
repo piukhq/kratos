@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     amex_auth_token: str = "5ca1870e-69a9-41b8-bbee-d7ee7d14f502"
     amex_hostname: str = "https://apigateway2s.americanexpress.com"
     stonegate_atreemo_url = "https://rihanna.atreemo.uk"
-
+ 
     # Punchh (TGIF) API 
     punchh_api_url: str = "https://dashboard.punchh.com"
 
