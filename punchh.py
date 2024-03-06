@@ -104,15 +104,17 @@ class PunchhUserLogin:
         punchh_url = settings.punchh_api_url
         punchh_uri = "/api2/mobile/users/login"
         request_body = json.dumps(req.media)
-        
+        logging.error(req.media)
         headers = get_mobile_api_headers(punchh_uri, req.media)
         response = requests.request("POST", urljoin(punchh_url, punchh_uri), headers=headers, data=request_body)
 
 
-        resp.status = falcon.HTTP_200
+        resp.status = response.status_code
         resp.content_type = falcon.MEDIA_JSON
-        logging.error(f'>>> {response.text}')
         try: 
             resp.media = json.loads(response.text)
+            logging.error(f'>>> {response.text}')
         except json.decoder.JSONDecodeError:
+            logging.error(resp.status)
+            logging.error(f' Error in JSON payload: {response.text[0:100]}')
             resp.media = response.text
