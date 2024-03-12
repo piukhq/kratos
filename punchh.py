@@ -58,7 +58,7 @@ def get_mobile_api_headers(uri, payload):
 
 class PunchhUserInfo:
     def on_get(self, req, resp):
-        punchh_url = settings.punchh_api_url
+        punchh_url = settings.punchh_dashboard_api_url
         user_id = get_user_id_from_query_parameters(req)
 
         punchh_payload = json.dumps({
@@ -75,7 +75,7 @@ class PunchhUserInfo:
 
 class PunchhUserExtensiveTimeline:
     def on_get(self, req, resp):
-        punchh_url = settings.punchh_api_url
+        punchh_url = settings.punchh_dashboard_api_url
         user_id = get_user_id_from_query_parameters(req)
         punchh_uri = f'/api2/dashboard/users/extensive_timeline?user_id={user_id}'
         headers = get_platform_api_headers()
@@ -89,7 +89,7 @@ class PunchhUserExtensiveTimeline:
 
 class PunchhDashboardLocations:
     def on_get(self, req, resp):
-        punchh_url = settings.punchh_api_url
+        punchh_url = settings.punchh_dashboard_api_url
         punchh_uri = "/api2/dashboard/locations"
         headers = get_platform_api_headers()
         response = requests.request("GET", urljoin(punchh_url, punchh_uri), headers=headers)
@@ -101,7 +101,7 @@ class PunchhDashboardLocations:
 
 class PunchhUserLogin:
     def on_post(self, req, resp):
-        punchh_url = settings.punchh_api_url
+        punchh_url = settings.punchh_mobile_api_url
         punchh_uri = "/api2/mobile/users/login"
         request_body = json.dumps(req.media)
         headers = get_mobile_api_headers(punchh_uri, req.media)

@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     stonegate_atreemo_url = "https://rihanna.atreemo.uk"
  
     # Punchh (TGIF) API 
-    punchh_api_url: str = "https://dashboard.punchh.com"
+    punchh_mobile_api_url: str = "https://mobileapi.punchh.com"
+    punchh_dashboard_api_url: str = "https://dashboard.punchh.com"
 
 settings = Settings()
