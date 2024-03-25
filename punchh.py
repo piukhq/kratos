@@ -105,7 +105,7 @@ class PunchhUserLogin:
         punchh_uri = "/api2/mobile/users/login"
         request_body = json.dumps(req.media)
         headers = get_mobile_api_headers(punchh_uri, req.media)
-        response = requests.request("GET", urljoin(punchh_url, punchh_uri), headers=headers, data=request_body)
+        response = requests.request("POST", urljoin(punchh_url, punchh_uri), headers=headers, data=request_body)
 
 
         resp.status = response.status_code
