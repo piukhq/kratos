@@ -16,6 +16,6 @@ class Settings(BaseSettings):
  
     # Punchh (TGIF) API 
     punchh_mobile_api_url: str = "https://mobileapi.punchh.com"
-    punchh_dashboard_api_url: str = "https://dashboard.punchh.com"
+    punchh_dashboard_api_url: str = "https://dashboard-api.punchh.com"
 
 settings = Settings()
