@@ -107,7 +107,7 @@ class PunchhUserLogin:
         headers = get_mobile_api_headers(punchh_uri, req.media)
         response = requests.request("POST", urljoin(punchh_url, punchh_uri), headers=headers, data=request_body)
 
-
+        logging.error(f'Ray ID : {response.headers["cf-ray"]}')
         resp.status = response.status_code
         resp.content_type = falcon.MEDIA_JSON
         try: 
