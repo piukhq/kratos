@@ -117,3 +117,21 @@ class PunchhUserLogin:
             logging.error(resp.status)
             logging.error(f' Error in JSON payload: {response.text[0:100]}')
             resp.media = response.text
+
+class PunchhUserSignUp:
+    def on_post(self, req, resp):
+        punchh_url = settings.punchh_mobile_api_url
+        punchh_uri = "/api2/mobile/users"
+        request_body = json.dumps(req.media)
+        headers = get_mobile_api_headers(punchh_uri, req.media)
+        response = requests.request("POST", urljoin(punchh_url, punchh_uri), headers=headers, data=request_body)
+
+        resp.status = response.status_code
+        resp.content_type = falcon.MEDIA_JSON
+        try: 
+            resp.media = json.loads(response.text)
+            logging.error(f'>>> {resp.media}')
+        except json.decoder.JSONDecodeError:
+            logging.error(resp.status)
+            logging.error(f' Error in JSON payload: {response.text[0:100]}')
+            resp.media = response.text
